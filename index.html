@@ -1,107 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ejercicio Tailwind + Flexbox</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .group:hover .dropdown-menu {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ejercicio Tailwind + Flexbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilo para el menú desplegable del avatar */
+        .group:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        /* Estilo para el menú lateral en móvil (overlay) */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 40; /* Mayor que el contenido pero menor que el sidebar */
+            display: none; /* Oculto por defecto */
+        }
+        .sidebar-overlay.open {
+            display: block;
+        }
+        /* La barra lateral en móvil */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: -16rem; /* Oculto fuera de pantalla */
+            height: 100%;
+            transition: left 0.3s ease;
+            z-index: 50; /* Sobre todo */
+        }
+        #sidebar.open {
+            left: 0; /* Visible */
+        }
+        /* En pantallas MD+, vuelve a ser estático y visible */
+        @media (min-width: 768px) {
+            #sidebar {
+                position: static;
+                left: 0 !important;
+                transition: none;
+                height: auto; /* Permite que tome la altura de su contenedor flex */
+            }
+        }
+    </style>
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
 
-  <main class="container mx-auto">
-            <div class="flex min-h-screen">
-        
-            <aside class="hidden md:flex w-64 flex-col bg-slate-900 text-white shadow-xl">
-        <div class="p-4 text-2xl font-bold border-b border-slate-800">Panel Admin</div>
-        <nav class="flex-1 p-4 space-y-2">
-          <a class="block px-3 py-2 rounded-lg bg-slate-800 font-semibold" href="#">🏠 Dashboard</a>
-          <a class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition" href="#">📚 Cursos</a>
-          <a class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition" href="#">⚙️ Ajustes</a>
-        </nav>
-      </aside>
-      
-            <div class="flex-1 flex flex-col">
-          
-                <header class="flex items-center justify-between p-4 bg-white border-b border-slate-200 shadow-sm">
-          <h1 class="text-2xl font-semibold text-slate-900">Mi Panel</h1>
-          
-                    <div class="flex items-center gap-4">
-            <button class="hidden sm:block px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition">
-              🔔 Notificaciones
-            </button>
+    <main>
+        <div class="flex min-h-screen">
+        
+            <aside id="sidebar" class="w-64 flex-col bg-slate-900 text-white shadow-xl hidden md:flex">
+                <div class="p-4 text-2xl font-bold border-b border-slate-800">Panel Admin</div>
+                <nav class="flex-1 p-4 space-y-2">
+                    <a class="block px-3 py-2 rounded-lg bg-slate-800 font-semibold" href="#">🏠 Dashboard</a>
+                    <a class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition" href="#">📚 Cursos</a>
+                    <a class="block px-3 py-2 rounded-lg hover:bg-slate-800 transition" href="#">⚙️ Ajustes</a>
+                </nav>
+            </aside>
             
-            <div class="relative group cursor-pointer">
-                <img src="imagenes/avatar.png" class="w-10 h-10 rounded-full object-cover shadow-lg" alt="usuario" />
-                
-                <div class="dropdown-menu absolute right-0 mt-3 w-72 bg-white rounded-lg shadow-xl p-4 z-10 
-                            opacity-0 invisible transition-all duration-300 transform translate-y-2">
+            <div id="sidebar-overlay" class="sidebar-overlay md:hidden"></div>
+
+            <div class="flex-1 flex flex-col">
+            
+                <header class="flex items-center justify-between p-4 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-30">
                     
-                    <div class="flex flex-col items-center text-center">
-                        <img src="imagenes/avatar.png" class="w-16 h-16 rounded-full object-cover mb-2" alt="Ana García" />
-                        <h3 class="text-lg font-bold text-slate-900">Ana García</h3>
-                        <p class="text-xs text-indigo-600 font-medium mb-3">Diseñadora UI/UX</p>
+                    <div class="flex items-center gap-4">
+                        <button id="menu-button" class="md:hidden text-slate-900 p-2 rounded-lg hover:bg-slate-100 transition">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            </svg>
+                        </button>
+                        <h1 class="text-2xl font-semibold text-slate-900">Mi Panel</h1>
+                    </div>
+                
+                    <div class="flex items-center gap-4">
+                        <button class="hidden sm:block px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition">
+                            🔔 Notificaciones
+                        </button>
                         
-                        <p class="text-slate-700 text-xs leading-relaxed mb-4">
-                            Apasionada por crear experiencias digitales increíbles y accesibles. Especializada en diseño centrado en el usuario.
-                        </p>
-                        
-                        <div class="flex gap-3 w-full justify-center">
-                            <button class="flex-1 px-3 py-1.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition">
-                                Seguir
-                            </button>
-                            <button class="flex-1 px-3 py-1.5 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition">
-                                Mensaje
-                            </button>
+                        <div class="relative group cursor-pointer">
+                            <img src="imagenes/avatar.png" class="w-10 h-10 rounded-full object-cover shadow-lg" alt="usuario" />
+                            
+                            <div class="dropdown-menu absolute right-0 mt-3 w-72 bg-white rounded-lg shadow-xl p-4 z-10 
+                                            opacity-0 invisible transition-all duration-300 transform translate-y-2">
+                                
+                                <div class="flex flex-col items-center text-center">
+                                    <img src="imagenes/avatar.png" class="w-16 h-16 rounded-full object-cover mb-2" alt="Ana García" />
+                                    <h3 class="text-lg font-bold text-slate-900">Ana García</h3>
+                                    <p class="text-xs text-indigo-600 font-medium mb-3">Diseñadora UI/UX</p>
+                                    
+                                    <p class="text-slate-700 text-xs leading-relaxed mb-4">
+                                        Apasionada por crear experiencias digitales increíbles y accesibles. Especializada en diseño centrado en el usuario.
+                                    </p>
+                                    
+                                    <div class="flex gap-3 w-full justify-center">
+                                        <button class="flex-1 px-3 py-1.5 bg-slate-900 text-white text-sm font-medium rounded-lg hover:bg-slate-700 transition">
+                                            Seguir
+                                        </button>
+                                        <button class="flex-1 px-3 py-1.5 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition">
+                                            Mensaje
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </header>
+                
+                <section class="flex-1 p-4 sm:p-8 bg-slate-50">
+                    <h2 class="text-xl font-bold mb-6 text-slate-800">Métricas Principales</h2>
+                    
+                    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                        
+                        <article class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-500 text-center">
+                            <img src="imagenes/grupo de personas.png" class="w-20 h-20 mx-auto mb-4" alt="usuarios" />
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">Usuarios</h3>
+                            <p class="text-slate-600 text-sm">Gestión completa de usuarios registrados.</p>
+                        </article>
+                        
+                        <article class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 text-center">
+                            <img src="imagenes/ventas.png" class="w-20 h-20 mx-auto mb-4" alt="ingresos" />
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">Ingresos</h3>
+                            <p class="text-slate-600 text-sm">Seguimiento de ventas y rendimiento diario.</p>
+                        </article>
+                        
+                        <article class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-500 text-center">
+                            <img src="imagenes/proyectos.png" class="w-20 h-20 mx-auto mb-4" alt="proyectos" />
+                            <h3 class="text-xl font-bold text-slate-900 mb-1">Proyectos</h3>
+                            <p class="text-slate-600 text-sm">Proyectos activos actualmente en el pipeline.</p>
+                        </article>
+                    </div>
+                </section>
+                
+                <footer class="p-4 text-center text-slate-600 bg-white border-t border-slate-200">
+                    © 2025 Mi Dashboard. Desarrollado con Tailwind CSS y Flexbox.
+                </footer>
+                
             </div>
-                      </div>
-        </header>
-        
-                <section class="flex-1 p-4 sm:p-8 bg-slate-50">
-          <h2 class="text-xl font-bold mb-6 text-slate-800">Métricas Principales</h2>
-          
-                    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              
-                        <article class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-500 text-center">
-             <img src="imagenes/grupo de personas.png" class="w-20 h-20 mx-auto mb-4" alt="usuarios" />
-             <h3 class="text-xl font-bold text-slate-900 mb-1">Usuarios</h3>
-              <p class="text-slate-600 text-sm">Gestión completa de usuarios registrados.</p>
-            </article>
-            
-                        <article class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500 text-center">
-              <img src="imagenes/ventas.png" class="w-20 h-20 mx-auto mb-4" alt="ingresos" />
-              <h3 class="text-xl font-bold text-slate-900 mb-1">Ingresos</h3>
-              <p class="text-slate-600 text-sm">Seguimiento de ventas y rendimiento diario.</p>
-            </article>
-            
-                        <article class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-purple-500 text-center">
-              <img src="imagenes/proyectos.png" class="w-20 h-20 mx-auto mb-4" alt="proyectos" />
-              <h3 class="text-xl font-bold text-slate-900 mb-1">Proyectos</h3>
-              <p class="text-slate-600 text-sm">Proyectos activos actualmente en el pipeline.</p>
-            </article>
-          </div>
-        </section>
-        
-                <footer class="p-4 text-center text-slate-600 bg-white border-t border-slate-200">
-          © 2025 Mi Dashboard. Desarrollado con Tailwind CSS y Flexbox.
-        </footer>
-        
-      </div>
-    </div>
-        
-  </main>
+        </div>
+    </main>
 
-<p class="p-4 text-sm text-slate-700 mt-8 border-t border-slate-300 mx-auto container">
-</p>
+    <p class="p-4 text-sm text-slate-700 mt-8 border-t border-slate-300 mx-auto container"></p>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuButton = document.getElementById('menu-button');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
 
+            const toggleMenu = () => {
+                // Alterna 'hidden' para el menú principal en móvil (importante para que el elemento exista al abrir)
+                sidebar.classList.toggle('hidden'); 
+                // Alterna 'open' para la animación de slide (definida en CSS)
+                sidebar.classList.toggle('open'); 
+                overlay.classList.toggle('open');
+            };
+
+            // Abrir y cerrar el menú
+            menuButton.addEventListener('click', toggleMenu);
+            
+            // Cerrar el menú al hacer clic en el overlay
+            overlay.addEventListener('click', toggleMenu);
+            
+            // Lógica para manejar el redimensionamiento a escritorio
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    // Si es escritorio (md+), aseguramos que se vea y se quiten las clases de móvil
+                    sidebar.classList.remove('hidden', 'open');
+                    overlay.classList.remove('open');
+                    sidebar.classList.add('md:flex'); // Aseguramos que tenga su clase de escritorio
+                } else {
+                    // Si es móvil, aseguramos que esté oculta hasta que se abra
+                    if (!sidebar.classList.contains('open')) {
+                         sidebar.classList.add('hidden'); 
+                    }
+                    sidebar.classList.remove('md:flex');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
