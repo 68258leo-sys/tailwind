@@ -6,7 +6,6 @@
   <title>Ejercicio Tailwind + Flexbox</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* El div que contiene el menú desplegable (es decir, el contenido del perfil) */
     .group:hover .dropdown-menu {
       opacity: 1;
       visibility: visible;
@@ -16,7 +15,7 @@
 </head>
 <body class="min-h-screen bg-slate-100 text-slate-800">
 
-  <main class="container mx-auto p-6">
+  <main class="container mx-auto">
             <div class="flex min-h-screen">
         
             <aside class="hidden md:flex w-64 flex-col bg-slate-900 text-white shadow-xl">
@@ -34,7 +33,7 @@
           <h1 class="text-2xl font-semibold text-slate-900">Mi Panel</h1>
           
                     <div class="flex items-center gap-4">
-            <button class="px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition">
+            <button class="hidden sm:block px-4 py-2 border border-slate-300 rounded-lg text-slate-700 hover:bg-slate-50 transition">
               🔔 Notificaciones
             </button>
             
@@ -62,13 +61,12 @@
                             </button>
                         </div>
                     </div>
-                    
                 </div>
             </div>
-          </div>
+                      </div>
         </header>
         
-                <section class="flex-1 p-8 bg-slate-50">
+                <section class="flex-1 p-4 sm:p-8 bg-slate-50">
           <h2 class="text-xl font-bold mb-6 text-slate-800">Métricas Principales</h2>
           
                     <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -99,8 +97,11 @@
         
       </div>
     </div>
-    
+        
   </main>
+
+<p class="p-4 text-sm text-slate-700 mt-8 border-t border-slate-300 mx-auto container">
+</p>
+
 </body>
 </html>
-
